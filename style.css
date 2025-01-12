@@ -1,0 +1,15 @@
+/* Style for the map container */
+#map {
+    height: 90vh; /* Full height minus header */
+    width: 100%; /* Full width */
+    margin: 0;
+    padding: 0;
+}
+
+/* Center the title */
+h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem;
+}
