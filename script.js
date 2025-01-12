@@ -6,18 +6,51 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
 }).addTo(map);
 
-// Add a sample fire marker (example: Los Angeles)
-L.circle([34.05, -118.25], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 10000 // 10 km radius
-}).addTo(map).bindPopup("<b>Fire Detected!</b><br>Los Angeles Area.");
+// Example fire markers
+const fireData = [
+    { lat: 34.05, lon: -118.25, risk: 'High Risk' }, // Los Angeles
+    { lat: 37.77, lon: -122.42, risk: 'Medium Risk' } // San Francisco
+];
 
-// Add another fire marker (example: San Francisco)
-L.circle([37.77, -122.42], {
-    color: 'orange',
-    fillColor: '#f79',
-    fillOpacity: 0.5,
-    radius: 8000 // 8 km radius
-}).addTo(map).bindPopup("<b>Fire Detected!</b><br>San Francisco Area.");
+// Add markers for fire data. This is just a placeholder for now with the LA and SF markers used above. This will change once
+// we get the predicting model finished.
+fireData.forEach(fire => {
+    const color = fire.risk === 'High Risk' ? 'red' : 'orange';
+    L.circle([fire.lat, fire.lon], {
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.5,
+        radius: 10000 // Example radius
+    }).addTo(map).bindPopup(`<b>Fire Detected!</b><br>Risk Level: ${fire.risk}`);
+});
+
+// Function to get the user's current location
+function locateUser() {
+    if (navigator.geolocation) {
+        // Request the user's location
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                // Extract latitude and longitude
+                const userLat = position.coords.latitude;
+                const userLon = position.coords.longitude;
+
+                // Add a marker for the user's location
+                const userMarker = L.marker([userLat, userLon]).addTo(map);
+                userMarker.bindPopup("<b>Your Location</b>").openPopup();
+
+                // Center the map on the user's location
+                map.setView([userLat, userLon], 10); // Zoom level 10
+            },
+            (error) => {
+                // Handle errors (e.g., user denies location access)
+                console.error("Error getting location:", error.message);
+                alert("Unable to retrieve your location.");
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+// Call the function to locate the user
+locateUser();
